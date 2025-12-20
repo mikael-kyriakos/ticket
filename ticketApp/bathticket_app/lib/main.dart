@@ -77,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: [
+            // Note: can change this so that the title is part of the listview builder, rather than creating the weird top bit
             Container(
               child: Text(
                 "Available Tickets:",
