@@ -11,6 +11,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      // NOTE - CAN DELETE THE ABOVE PROPERTY ONCE DONE WITH APP
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -27,6 +29,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Color.fromARGB(255, 44, 87, 151)),
         useMaterial3: true,
+        scaffoldBackgroundColor: Color.fromARGB(255, 255, 255, 255),
       ),
       home: const MyHomePage(title: 'BathTicket'),
     );
@@ -52,7 +55,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  var arr = [1,2,3,4,5,6,7,8,9,10];
+  final eventsArr = ["Labyrinth Bar & Nightclub", "Second Bridge", "Komedia", "Opa", "Walcot House", "Uni of Bath (Campus)", "Other"];
 
   void _incrementCounter() {
     setState(() {
@@ -71,55 +74,13 @@ class _MyHomePageState extends State<MyHomePage> {
     // by the _incrementCounter method above.
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: Colors.white,
+        title: Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold)),
+        elevation: 0,
       ),
       body: Center(
-        child: Column(
-          children: [
-            // Note: can change this so that the title is part of the listview builder, rather than creating the weird top bit
-            Container(
-              child: Text(
-                "Available Tickets:",
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-              margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            ),
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: arr.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          height: 100,
-                          margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                          child: Center(child: Text('Ticket ${arr[index]}')),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            color: Color.fromARGB(255, 236, 236, 236),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 100,
-                        width: 100,
-                        margin: EdgeInsets.fromLTRB(0, 20, 20, 0),
-                        child: Center(child: Text('BUY')),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(20)),
-                          color: Color.fromARGB(255, 255, 217, 0),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-              ),
-            ),
-          ],
-        )
+        child: eventListView(arr: eventsArr)
         /*
         child: Column(
           // Column is also a layout widget. It takes a list of children and
@@ -156,16 +117,155 @@ class _MyHomePageState extends State<MyHomePage> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.featured_play_list_outlined),
+            icon: Icon(Icons.how_to_vote_rounded),
             label: 'Buy',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.money_rounded),
+            icon: Icon(Icons.monetization_on),
             label: 'Sell',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.wallet_rounded),
+            label: 'Tickets',
           ),
         ],
         elevation: 0,
         currentIndex: 0,
+      ),
+    );
+  }
+}
+
+class eventListView extends StatelessWidget {
+  const eventListView({
+    super.key,
+    required this.arr,
+  });
+
+  final List<String> arr;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: (arr.length+1),
+      itemBuilder: (BuildContext context, int index) {
+        if (index == 0) {
+          return Container(
+            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Venues & Events",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "Here are all current available events and venues: (tap BROWSE to see tickets being sold)",
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                )
+              ],
+            ),
+          );
+        }
+        else {
+          var currentEvent = arr[index-1];
+          return Row(
+            children: [
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                    // color: Color.fromARGB(255, 236, 236, 236),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color.fromARGB(255, 255, 191, 96),
+                        Color.fromARGB(255, 255, 174, 174),
+                      ],
+                    ),
+                  ),
+                  height: 100,
+                  margin: EdgeInsets.fromLTRB(20, 20, 10, 0),
+                  child: Center(child: Text('$currentEvent', style: TextStyle(fontWeight: FontWeight.bold))),
+                ),
+              ),
+              /*
+              Container(
+                height: 100,
+                width: 150,
+                margin: EdgeInsets.fromLTRB(0, 20, 20, 0),
+                child: Center(child: Text('BROWSE', style: TextStyle(fontWeight: FontWeight.bold))),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  border: Border.all(color: Colors.white.withOpacity(0.7), width: 1),
+                  // color: Color.fromARGB(255, 0, 174, 255),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromARGB(255, 136, 215, 252),
+                      Color.fromARGB(255, 84, 199, 151),
+                    ],
+                  ),
+                ),
+              ),
+              */
+              InkWell(
+                child: Container(
+                  height: 100,
+                  width: 150,
+                  margin: EdgeInsets.fromLTRB(0, 20, 20, 0),
+                  child: Center(child: Text('BROWSE', style: TextStyle(fontWeight: FontWeight.bold))),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                    // color: Color.fromARGB(255, 0, 174, 255),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color.fromARGB(255, 136, 215, 252),
+                        Color.fromARGB(255, 84, 199, 151),
+                      ],
+                    ),
+                  ),
+                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => testRoute(event: currentEvent)),
+                  );
+                },
+              )
+            ],
+          );
+        }
+      }
+    );
+  }
+}
+
+class testRoute extends StatelessWidget {
+  const testRoute({super.key, required this.event});
+
+  final String event;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Tickets: $event", style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
+        ),
       ),
     );
   }
