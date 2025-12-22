@@ -55,7 +55,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
-  final eventsArr = ["Labyrinth Bar & Nightclub", "Second Bridge", "Komedia", "Opa", "Walcot House", "Uni of Bath (Campus)", "Other"];
+  int currentIndex = 0;
+
+  final _children = <Widget>[
+    EventListView(),
+    SellPage(),
+    TicketsPage()
+  ];
+
+  void onTabTapped(int index) {
+    setState(() {currentIndex = index;});
+  }
 
   void _incrementCounter() {
     setState(() {
@@ -72,6 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
+
     return Scaffold(
       appBar: AppBar(
         // backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -79,12 +90,13 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text(widget.title, style: TextStyle(fontWeight: FontWeight.bold)),
         elevation: 0,
       ),
+      /*
       body: Center(
-        child: eventListView(arr: eventsArr)
+        child: EventListView()
         /*
         child: Column(
           // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
+          // eventsArranges them vertically. By default, it sizes itself to fit its
           // children horizontally, and tries to be as tall as its parent.
           // Column has various properties to control how it sizes itself and
           // how it positions its children. Here we use mainAxisAlignment to
@@ -107,6 +119,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         */
       ),
+      */
+      body: _children[currentIndex],
       /*
       floatingActionButton: FloatingActionButton(
         onPressed: _incrementCounter,
@@ -115,13 +129,14 @@ class _MyHomePageState extends State<MyHomePage> {
       ), // This trailing comma makes auto-formatting nicer for build methods.
       */
       bottomNavigationBar: BottomNavigationBar(
+        onTap: onTabTapped,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.how_to_vote_rounded),
             label: 'Buy',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.monetization_on),
+            icon: Icon(Icons.sell_rounded),
             label: 'Sell',
           ),
           BottomNavigationBarItem(
@@ -130,25 +145,24 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
         elevation: 0,
-        currentIndex: 0,
+        currentIndex: currentIndex,
       ),
     );
   }
 }
 
-class eventListView extends StatelessWidget {
-  const eventListView({
+class EventListView extends StatelessWidget {
+  EventListView({
     super.key,
-    required this.arr,
   });
 
-  final List<String> arr;
+  final eventsArr = <String>["Labyrinth Bar & Nightclub", "Second Bridge", "Komedia", "Opa", "Walcot House", "Uni of Bath (Campus)", "Other"];
 
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
       shrinkWrap: true,
-      itemCount: (arr.length+1),
+      itemCount: (eventsArr.length+1),
       itemBuilder: (BuildContext context, int index) {
         if (index == 0) {
           return Container(
@@ -169,7 +183,7 @@ class eventListView extends StatelessWidget {
           );
         }
         else {
-          var currentEvent = arr[index-1];
+          var currentEvent = eventsArr[index-1];
           return Row(
             children: [
               Expanded(
@@ -213,33 +227,35 @@ class eventListView extends StatelessWidget {
                 ),
               ),
               */
-              InkWell(
-                child: Container(
-                  height: 100,
-                  width: 150,
-                  margin: EdgeInsets.fromLTRB(0, 20, 20, 0),
-                  child: Center(child: Text('BROWSE', style: TextStyle(fontWeight: FontWeight.bold))),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(20)),
-                    border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
-                    // color: Color.fromARGB(255, 0, 174, 255),
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Color.fromARGB(255, 136, 215, 252),
-                        Color.fromARGB(255, 84, 199, 151),
-                      ],
-                    ),
+
+              Container(
+                height: 100,
+                width: 150,
+                margin: const EdgeInsets.fromLTRB(0, 20, 20, 0),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                  // color: Color.fromARGB(255, 0, 174, 255),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromARGB(255, 136, 215, 252),
+                      Color.fromARGB(255, 120, 247, 192),
+                    ],
                   ),
                 ),
-                onTap: () {
+                child: InkWell(
+                  onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => testRoute(event: currentEvent)),
+                    MaterialPageRoute(builder: (context) => TicketSalePage(event: currentEvent)),
                   );
-                },
-              )
+                  },
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  child: Center(child: Text('BROWSE', style: TextStyle(fontWeight: FontWeight.bold))),
+                )
+              ),
             ],
           );
         }
@@ -248,8 +264,8 @@ class eventListView extends StatelessWidget {
   }
 }
 
-class testRoute extends StatelessWidget {
-  const testRoute({super.key, required this.event});
+class TicketSalePage extends StatelessWidget {
+  const TicketSalePage({super.key, required this.event});
 
   final String event;
 
@@ -267,6 +283,141 @@ class testRoute extends StatelessWidget {
           child: Text('Go back!'),
         ),
       ),
+    );
+  }
+}
+
+class SellPage extends StatelessWidget {
+  const SellPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text("Hi");
+  }
+}
+
+class TicketsPage extends StatelessWidget {
+  TicketsPage({super.key});
+
+  // Assuming the list taken from the database is ordered correctly by date (ascending for upcoming, descending for past)
+  final upcomingTickets = [["LOCA", "14/01/2026"], ["Fishie's", "04/02/2026"]];
+  final pastTickets = [["Baiana", "15/12/2025"], ["Glam", "12/12/2025"], ["Glam", "27/11/2025"]];
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: (upcomingTickets.length + pastTickets.length + 3),
+      itemBuilder: (BuildContext context, int index) {
+        if (index == 0) {
+          return Container(
+            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "My Tickets",
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  "View below any tickets you have stored on the app: (If you have received any free tickets from us, they will appear here)",
+                  style: TextStyle(fontSize: 14, color: Colors.grey),
+                )
+              ],
+            ),
+          );
+        }
+        else if (index == 1) {
+          return Container(
+            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Text("Upcoming Tickets", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          );
+        }
+        else if (index > 1 && index < upcomingTickets.length + 2) {
+          return Container(
+            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                  // color: Color.fromARGB(255, 0, 174, 255),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromARGB(255, 136, 215, 252),
+                      Color.fromARGB(255, 120, 247, 192),
+                    ],
+                  ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.all(15),
+                    child: Text(
+                      upcomingTickets[index - 2][0],
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(15),
+                  child: Text(
+                    upcomingTickets[index - 2][1],
+                    style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 12),
+                  ),
+                ),
+              ],
+            )
+          );
+        }
+        else if (index == upcomingTickets.length + 2) {
+          return Container(
+            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+            child: Text("Past Tickets", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+          );
+        }
+        else {
+          return Container(
+            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+            height: 100,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(20)),
+                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                  // color: Color.fromARGB(255, 0, 174, 255),
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      Color.fromARGB(255, 252, 202, 136),
+                      Color.fromARGB(255, 197, 173, 157),
+                    ],
+                  ),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    margin: EdgeInsets.all(15),
+                    child: Text(
+                      pastTickets[index - upcomingTickets.length - 3][0],
+                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(15),
+                  child: Text(
+                    pastTickets[index - upcomingTickets.length - 3][1],
+                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+                  ),
+                ),
+              ],
+            )
+          );
+        }
+      }
     );
   }
 }
