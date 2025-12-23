@@ -378,25 +378,34 @@ class UpcomingTicketContainer extends StatelessWidget {
               ],
             ),
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.all(15),
-              child: Text(
-                upcomingTickets[index - 2][0],
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TicketOpenPage(ticket: upcomingTickets[index-2])),
+          );
+        },
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.all(15),
+                child: Text(
+                  upcomingTickets[index - 2][0],
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.all(15),
-            child: Text(
-              upcomingTickets[index - 2][1],
-              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 12),
+            Container(
+              margin: EdgeInsets.all(15),
+              child: Text(
+                upcomingTickets[index - 2][1],
+                style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 12),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       )
     );
   }
@@ -422,15 +431,17 @@ class PastTicketContainer extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(20)),
             border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
-            // color: Color.fromARGB(255, 0, 174, 255),
+            color: Color.fromARGB(255, 203, 222, 230),
+            /*
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color.fromARGB(255, 215, 169, 109),
+                Color.fromARGB(255, 217, 151, 65),
                 Color.fromARGB(255, 226, 197, 123),
               ],
             ),
+            */
       ),
       child: Row(
         children: [
@@ -452,6 +463,29 @@ class PastTicketContainer extends StatelessWidget {
           ),
         ],
       )
+    );
+  }
+}
+
+class TicketOpenPage extends StatelessWidget {
+  const TicketOpenPage({super.key, this.ticket});
+
+  final ticket;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("${ticket[0]} (${ticket[1]})", style: TextStyle(fontWeight: FontWeight.bold)),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text('Go back!'),
+        ),
+      ),
     );
   }
 }
