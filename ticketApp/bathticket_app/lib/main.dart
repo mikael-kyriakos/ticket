@@ -334,43 +334,7 @@ class TicketsPage extends StatelessWidget {
           );
         }
         else if (index > 1 && index < upcomingTickets.length + 2) {
-          return Container(
-            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
-                  // color: Color.fromARGB(255, 0, 174, 255),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromARGB(255, 136, 215, 252),
-                      Color.fromARGB(255, 120, 247, 192),
-                    ],
-                  ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(15),
-                    child: Text(
-                      upcomingTickets[index - 2][0],
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(15),
-                  child: Text(
-                    upcomingTickets[index - 2][1],
-                    style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 12),
-                  ),
-                ),
-              ],
-            )
-          );
+          return UpcomingTicketContainer(upcomingTickets: upcomingTickets, index: index);
         }
         else if (index == upcomingTickets.length + 2) {
           return Container(
@@ -379,45 +343,115 @@ class TicketsPage extends StatelessWidget {
           );
         }
         else {
-          return Container(
-            margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(20)),
-                  border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
-                  // color: Color.fromARGB(255, 0, 174, 255),
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Color.fromARGB(255, 252, 202, 136),
-                      Color.fromARGB(255, 197, 173, 157),
-                    ],
-                  ),
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    margin: EdgeInsets.all(15),
-                    child: Text(
-                      pastTickets[index - upcomingTickets.length - 3][0],
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                    ),
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(15),
-                  child: Text(
-                    pastTickets[index - upcomingTickets.length - 3][1],
-                    style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
-                  ),
-                ),
-              ],
-            )
-          );
+          return PastTicketContainer(pastTickets: pastTickets, upcomingTickets: upcomingTickets, index: index);
         }
       }
+    );
+  }
+}
+
+class UpcomingTicketContainer extends StatelessWidget {
+  const UpcomingTicketContainer({
+    super.key,
+    required this.upcomingTickets,
+    required this.index,
+  });
+
+  final List<List<String>> upcomingTickets;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+      height: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+            border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+            // color: Color.fromARGB(255, 0, 174, 255),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromARGB(255, 136, 215, 252),
+                Color.fromARGB(255, 120, 247, 192),
+              ],
+            ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(15),
+              child: Text(
+                upcomingTickets[index - 2][0],
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(15),
+            child: Text(
+              upcomingTickets[index - 2][1],
+              style: TextStyle(fontWeight: FontWeight.bold, fontStyle: FontStyle.italic, fontSize: 12),
+            ),
+          ),
+        ],
+      )
+    );
+  }
+}
+
+class PastTicketContainer extends StatelessWidget {
+  const PastTicketContainer({
+    super.key,
+    required this.pastTickets,
+    required this.upcomingTickets,
+    required this.index,
+  });
+
+  final List<List<String>> pastTickets;
+  final List<List<String>> upcomingTickets;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
+      height: 100,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+            border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+            // color: Color.fromARGB(255, 0, 174, 255),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                Color.fromARGB(255, 215, 169, 109),
+                Color.fromARGB(255, 226, 197, 123),
+              ],
+            ),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.all(15),
+              child: Text(
+                pastTickets[index - upcomingTickets.length - 3][0],
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+              ),
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.all(15),
+            child: Text(
+              pastTickets[index - upcomingTickets.length - 3][1],
+              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+            ),
+          ),
+        ],
+      )
     );
   }
 }
