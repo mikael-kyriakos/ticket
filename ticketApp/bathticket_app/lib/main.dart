@@ -1,4 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+
+// Qr code generator import
+import 'package:qr_flutter/qr_flutter.dart';
+
+// Crypto (for hashes) import
+import 'package:crypto/crypto.dart';
 
 void main() {
   runApp(const MyApp());
@@ -299,9 +307,11 @@ class SellPage extends StatelessWidget {
 class TicketsPage extends StatelessWidget {
   TicketsPage({super.key});
 
+
+  // Note: would be good to have a character limit for event names, to prevent overflowing (note: this may be a different point depending on device too)
   // Assuming the list taken from the database is ordered correctly by date (ascending for upcoming, descending for past)
-  final upcomingTickets = [["LOCA", "14/01/2026"], ["Fishie's", "04/02/2026"]];
-  final pastTickets = [["Baiana", "15/12/2025"], ["Glam", "12/12/2025"], ["Glam", "27/11/2025"]];
+  final upcomingTickets = [["LOCA", "14/01/2026", "23"], ["Fishie's", "04/02/2026", "76"], ["CS MARIO KART SHOWDOWN", "05/02/2026", "15"]];
+  final pastTickets = [["Baiana", "15/12/2025", "56"], ["Glam", "12/12/2025", "64"], ["Glam", "27/11/2025", "53"]];
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +330,7 @@ class TicketsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  "View below any tickets you have stored on the app: (If you have received any free tickets from us, they will appear here)",
+                  "View below any tickets you have stored on the app: (If you have received any free tickets from us, they will appear here)\n\nNOTE: Tap on a ticket to view it.",
                   style: TextStyle(fontSize: 14, color: Colors.grey),
                 )
               ],
@@ -443,34 +453,49 @@ class PastTicketContainer extends StatelessWidget {
             ),
             */
       ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              margin: EdgeInsets.all(15),
-              child: Text(
-                pastTickets[index - upcomingTickets.length - 3][0],
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TicketOpenPage(ticket: pastTickets[index - upcomingTickets.length - 3])),
+          );
+        },
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        child: Row(
+          children: [
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.all(15),
+                child: Text(
+                  pastTickets[index - upcomingTickets.length - 3][0],
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                ),
               ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.all(15),
-            child: Text(
-              pastTickets[index - upcomingTickets.length - 3][1],
-              style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+            Container(
+              margin: EdgeInsets.all(15),
+              child: Text(
+                pastTickets[index - upcomingTickets.length - 3][1],
+                style: TextStyle(fontStyle: FontStyle.italic, fontSize: 12),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       )
     );
   }
 }
 
 class TicketOpenPage extends StatelessWidget {
-  const TicketOpenPage({super.key, this.ticket});
+  TicketOpenPage({super.key, this.ticket});
 
   final ticket;
+
+  // can use this to decide colour for subtext below QR code based on whether the event is in the past or not
+  // var subContainerGradientColours;
+
+  // var qrBytes = utf8.encode("${ticket[0]} (${ticket[1]})")
+  // final qrHash = sha256.convert()
 
   @override
   Widget build(BuildContext context) {
@@ -478,13 +503,50 @@ class TicketOpenPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("${ticket[0]} (${ticket[1]})", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Go back!'),
-        ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Center(
+            child: Container(
+              margin: const EdgeInsets.all(30),
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                border: Border.all(color: Color.fromARGB(255, 26, 26, 26), width: 7),
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+              ),
+              child: QrImageView(
+                // data: sha256.convert(utf8.encode("${ticket[0]} ${ticket[1]} ${ticket[2]}")).toString(),
+                data: "${ticket[0]} ${ticket[1]} ${ticket[2]}",
+                version: QrVersions.auto,
+                size: 350.0,
+              ),
+            ),
+          ),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                    margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                      border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                      // color: Color.fromARGB(255, 0, 174, 255),
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          Color.fromARGB(255, 186, 136, 252),
+                          Color.fromARGB(255, 247, 120, 120),
+                        ],
+                      ),
+                    ),
+                    child: Text("Event: ${ticket[0]}\nDate: ${ticket[1]}\nName: MIKAEL KYRIAKOS", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
