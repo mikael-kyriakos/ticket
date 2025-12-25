@@ -503,50 +503,70 @@ class TicketOpenPage extends StatelessWidget {
       appBar: AppBar(
         title: Text("${ticket[0]} (${ticket[1]})", style: TextStyle(fontWeight: FontWeight.bold)),
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Center(
-            child: Container(
-              margin: const EdgeInsets.all(30),
-              padding: const EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                border: Border.all(color: Color.fromARGB(255, 26, 26, 26), width: 7),
-                borderRadius: BorderRadius.all(Radius.circular(30)),
+      body: Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.black,
+            /*
+            gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color.fromARGB(255, 18, 57, 77),
+                  Color.fromARGB(255, 17, 59, 41),
+                ],
               ),
-              child: QrImageView(
-                // data: sha256.convert(utf8.encode("${ticket[0]} ${ticket[1]} ${ticket[2]}")).toString(),
-                data: "${ticket[0]} ${ticket[1]} ${ticket[2]}",
-                version: QrVersions.auto,
-                size: 350.0,
-              ),
-            ),
+              */
           ),
-          Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
+              Center(
                 child: Container(
-                    margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
-                      // color: Color.fromARGB(255, 0, 174, 255),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Color.fromARGB(255, 186, 136, 252),
-                          Color.fromARGB(255, 247, 120, 120),
-                        ],
-                      ),
-                    ),
-                    child: Text("Event: ${ticket[0]}\nDate: ${ticket[1]}\nName: MIKAEL KYRIAKOS", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                  margin: const EdgeInsets.all(30),
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border.all(color: Color.fromARGB(255, 26, 26, 26), width: 3),
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
                   ),
+                  child: QrImageView(
+                    // data: sha256.convert(utf8.encode("${ticket[0]} ${ticket[1]} ${ticket[2]}")).toString(),
+                    data: "${ticket[0]} ${ticket[1]} ${ticket[2]}",
+                    version: QrVersions.auto,
+                    size: 350.0,
+                  ),
+                ),
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                        margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                        padding: const EdgeInsets.all(20),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(25)),
+                          border: Border.all(color: Colors.white.withOpacity(0.3), width: 2),
+                          color: Color.fromARGB(255, 255, 255, 255),
+                          /*
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color.fromARGB(255, 186, 136, 252),
+                              Color.fromARGB(255, 247, 120, 120),
+                            ],
+                          ),
+                          */
+                        ),
+                        child: Text("Event: ${ticket[0]}\nDate: ${ticket[1]}\nName: MIKAEL KYRIAKOS", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                      ),
+                  ),
+                ],
               ),
             ],
           ),
-        ],
+        ),
       ),
     );
   }
